@@ -78,8 +78,13 @@ class Client(object):
 
         return Product(response.json())
 
-    def find_product(self, store, product_id):
-        """
-        Search
+    def find_product(self, term, filter, page, count=25):
+        raise NotImplementedError()
 
-        """
+    def find_product_by_developer(self, developer, filter, page, count=25):
+        term = '@developer={}'.format(developer)
+        return self.find_product(term, filter, page, count)
+
+    def find_product_by_name(self, name, filter, page, count=25):
+        term = '@name={}'.format(developer)
+        return self.find_product(term, filter, page, count)
