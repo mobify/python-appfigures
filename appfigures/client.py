@@ -38,32 +38,46 @@ class Client(object):
 
         return {'Authorization': 'OAuth {}'.format(', '.join(auth_settings))}
 
-    def get_product(self, appfigures_id=None, store=None, product_id=None):
+    def get_product(self, appfigures_id=None, store=None, product_id=None,
+                    include_metadata=False):
         if appfigures_id:
-            return self._get_product_by_appfigures_id(appfigures_id)
+            return self._get_product_by_appfigures_id(
+                appfigures_id,
+                include_metadata=include_metadata)
 
         if store and product_id:
-            return self._get_product_by_store_id(store, product_id)
+            return self._get_product_by_store_id(
+                store,
+                product_id,
+                include_metadata=include_metadata)
 
         raise ParametersInvalid(
             "you have to provide an 'appfigure_id' or 'store' and 'product_id' "
             "parameters")
 
-    def _get_product_by_appfigures_id(self, appfigures_id):
+    def _get_product_by_appfigures_id(self, appfigures_id,
+                                      include_metadata=False):
         """
         Retrieve the product with the AppFigures product ID `product_id`.
         """
         path = '/products/{appfigures_id}'.format(appfigures_id=appfigures_id)
         url = self.BASE_URL.add_path_segment(path)
 
-        response = self.session.get(url.as_string(), timeout=self.timeout)
+        query_params = {}
+        if include_metadata:
+            query_params['meta'] = True
+
+        response = self.session.get(url.as_string(),
+                                    timeout=self.timeout,
+                                    params=query_params)
 
         if not response.ok:
             response.raise_for_status()
 
         return Product(response.json())
 
-    def _get_product_by_store_id(self, store, product_id):
+    def _get_product_by_store_id(self, store, product_id,
+                                 include_metadata=False):
         """
         Retrieve the product with the store identifier and the store ID.
         """
@@ -71,7 +85,13 @@ class Client(object):
                                                        product_id=product_id)
         url = self.BASE_URL.add_path_segment(path)
 
-        response = self.session.get(url.as_string(), timeout=self.timeout)
+        query_params = {}
+        if include_metadata:
+            query_params['meta'] = 'true'
+
+        response = self.session.get(url.as_string(),
+                                    timeout=self.timeout,
+                                    params=query_params)
 
         if not response.ok:
             response.raise_for_status()
