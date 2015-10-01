@@ -85,7 +85,7 @@ def test_retrieving_project_by_google_play_id_with_metadata(client):
         assert product.price.value == D('0.0')
 
         assert product.has_metadata == True
-        assert product.metadata.keys() == ['en', 'ja']
+        assert sorted(product.metadata.keys()) == sorted(['en', 'ja'])
 
         assert product.metadata.en.all_rating == D('3.93')
         assert product.metadata.all_rating_count == 162814
