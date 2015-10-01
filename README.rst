@@ -2,8 +2,8 @@ python-appfigures
 #############################
 
 
-.. image:: https://travis-ci.org//python-appfigures.svg?branch=master
-   :target: https://travis-ci.org//python-appfigures
+.. image:: https://travis-ci.org/mobify/python-appfigures.svg?branch=master
+   :target: https://travis-ci.org/mobify/python-appfigures
 
 
 License
@@ -11,4 +11,4 @@ License
 
 This code is licensed under the `MIT License`_.
 
-.. _`MIT License`: https://github.com//python-appfigures/blob/master/LICENSE
+.. _`MIT License`: https://github.com/mobify/python-appfigures/blob/master/LICENSE
