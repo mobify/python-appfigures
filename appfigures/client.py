@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 import os
+import six
 import requests
 
 from purl import URL
 
+from . import base
 from .decorators import cached_property
 from .products import Product
+from .reviews import ReviewCollection, Review
 
 
 class Client(object):
@@ -108,3 +111,63 @@ class Client(object):
     def find_product_by_name(self, name, filter, page, count=25):
         term = '@name={}'.format(developer)
         return self.find_product(term, filter, page, count)
+
+    def find_reviews(self, query=None, products=None, countries=None, page=1,
+                     count=25, languages=None, author=None, versions=None,
+                     stars=None, sort=None, start=None, end=None):
+
+        if 0 > count > 500:
+            raise exceptions.ParametersInvalid(
+                'count parameter has to be between 0 and 500')
+
+        if sort and not Review.is_valid_sort_key(sort):
+            raise exceptions.ParametersInvalid(
+                'key {} is not a valid sort key, only {} are allowed'.format(
+                    sort, Review.SORT_FIELDS))
+
+        url = self.BASE_URL.add_path_segment('/reviews/')
+
+        query_params = {'page': page,
+                        'count': count}
+
+        if query:
+            query_params['q'] = query
+
+        if products:
+            query_params['products'] = self._iter_to_query_param(products)
+
+        if countries:
+            query_params['countries'] = self._iter_to_query_param(countries)
+
+        if languages:
+            query_params['languages'] = self._iter_to_query_param(languages)
+
+        if versions:
+            query_params['versions'] = self._iter_to_query_param(versions)
+
+        if stars:
+            query_params['stars'] = self._iter_to_query_param(stars)
+
+        if author:
+            query_params['author'] = author
+
+        if sort:
+            query_params['sort'] = sort
+
+        if start:
+            query_params['start'] = start.strftime(base.QUERY_DATE_FORMAT)
+
+        if end:
+            query_params['end'] = end.strftime(base.QUERY_DATE_FORMAT)
+
+        response = self.session.get(url.as_string(),
+                                    timeout=self.timeout,
+                                    params=query_params)
+
+        if not response.ok:
+            response.raise_for_status()
+
+        return ReviewCollection(response.json())
+
+    def _iter_to_query_param(self, iterable):
+        return ','.join([six.u(str(i)) for i in iterable])

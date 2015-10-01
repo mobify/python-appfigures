@@ -3,6 +3,7 @@ from __future__ import unicode_literals, absolute_import
 import pytest
 import betamax
 
+from datetime import datetime
 from decimal import Decimal as D
 
 from appfigures import stores
@@ -102,3 +103,28 @@ def test_retrieving_project_by_google_play_id_with_metadata(client):
 
         with pytest.raises(AttributeError):
             product.metadata.de.all_rating
+
+
+@pytest.mark.integration
+def test_retrieve_reviews_for_app_store_product(client):
+    recorder = betamax.Betamax(client.session)
+
+    with recorder.use_cassette('retrieve_reviews_for_app_store_product'):
+        reviews = client.find_reviews(products=[5555936])
+
+        assert len(reviews) == 25
+
+        review = reviews[0]
+        assert review.product_id == '5555936'
+        assert review.original_review == "The app crashes whenever it wants to and just stops playing the music and won't start again unless I restart the app. I also can't download songs when a station is playing because the music will crash and yet again I will have to restart the app. 5 star Amazing music service but just a mediocre 1 star app."
+        assert review.weight == 0
+        assert review.title == 'Wow'
+        assert review.review == "The app crashes whenever it wants to and just stops playing the music and won't start again unless I restart the app. I also can't download songs when a station is playing because the music will crash and yet again I will have to restart the app. 5 star Amazing music service but just a mediocre 1 star app."
+        assert review.author == 'Tony D'
+        assert review.original_title == 'Wow'
+        assert review.version == '3.6.2.83'
+        assert review.country_iso == None
+        assert review.country_available == False
+        assert review.stars == D('2.00')
+        assert review.date == datetime(2015, 9, 30, 3, 31, 49)
+        assert review.id == '5555936L2RnbOL3Mz-NjX7wEuPpQIg'
