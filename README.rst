@@ -6,6 +6,10 @@ python-appfigures
    :target: https://travis-ci.org/mobify/python-appfigures
 
 
+**Disclaimer**: This project is under active development and currently provides
+an incomplete implementation of an API wrapper for the AppFigures API.
+
+
 License
 -------
 
