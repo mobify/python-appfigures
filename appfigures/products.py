@@ -6,6 +6,7 @@ from decimal import Decimal as D
 from dateutil.parser import parse
 
 from . import stores
+from . import devices
 
 Price = namedtuple('Price', ['value', 'currency'])
 
@@ -53,6 +54,18 @@ class Product(object):
             self.price = Price(D(price.get('price')), price.get('currency'))
         except (InvalidOperation, ValueError):
             self.price = None
+
+    @property
+    def is_handheld(self):
+        return devices.HANDHELD in self.devices
+
+    @property
+    def is_tablet(self):
+        return devices.TABLET in self.devices
+
+    @property
+    def is_desktop(self):
+        return devices.DESKTOP in self.devices
 
     @classmethod
     def from_json(cls, json):
