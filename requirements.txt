@@ -1,5 +1,0 @@
-tox
-pytest
-pytest-cache
-pytest-coverage
-betamax==0.5.0

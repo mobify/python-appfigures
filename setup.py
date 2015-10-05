@@ -4,8 +4,14 @@ import sys
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
-requires = ['python-dateutil', 'purl', 'six']
-tests_require = ['pytest', 'pytest-cache', 'pytest-cov']
+requires = ['python-dateutil',
+            'purl',
+            'six']
+
+tests_require = ['pytest',
+                 'pytest-cache',
+                 'pytest-cov',
+                 'betamax']
 
 
 class PyTest(TestCommand):
