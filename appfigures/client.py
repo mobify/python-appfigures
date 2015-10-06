@@ -174,6 +174,31 @@ class Client(object):
                             include_inapps=False,
                             start_date=None, end_date=None,
                             granularity=reports.Granularity.DAILY):
+        """
+        Generate a simple sales report for all or a subset of products.
+
+        `appfigures API Documentation
+        <http://docs.appfigures.com/api/reference/v2/sales#Getting_Simple_Totals>`
+
+        Args:
+            products: A list of appfigure product IDs.
+            countries: A list of ISO-3166-1 alpha-2 ISO codes.
+            include_inapps: A boolean to indicate if children of the app should
+                be included in the report (defaut: `False`).
+            start_date: The date to generate the report **from** in YYYY-MM-DD
+                format. The date is included in the report.
+            end_date: The date to generate the report **to** in YYYY-MM-DD
+                format. The date is included in the report.
+            granularity: A valid `Granularity` value describing how dates are
+                aggregate in the report (default: `daily`).
+
+        Returns:
+            A `SalesReport <appfigures.reports.SalesReport` instance.
+
+        Raises:
+            ParametersInvalid: An invalid parameter for the API is provided.
+            HTTPError: The API call returned a status code that's not `200 OK`.
+        """
         url = self.BASE_URL.add_path_segment('/reports/sales/')
 
         query_params = {}

@@ -37,6 +37,11 @@ class ReportCollection(dict):
 
 
 class SalesReport(AppFigureObject):
+    """
+    A simple sales report representation for appfigures.
+
+    http://docs.appfigures.com/api/reference/v2/sales#Getting_Simple_Totals
+    """
 
     def _load_from_json(self, json):
         # An int representing the total number of downloads.
