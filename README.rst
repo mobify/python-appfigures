@@ -6,6 +6,11 @@ python-appfigures
    :target: https://travis-ci.org/mobify/python-appfigures
 
 
+.. image:: https://coveralls.io/repos/mobify/python-appfigures/badge.svg?branch=master&service=github
+  :target: https://coveralls.io/github/mobify/python-appfigures?branch=master
+
+
+
 **Disclaimer**: This project is under active development and currently provides
 an incomplete implementation of an API wrapper for the AppFigures API.
 
