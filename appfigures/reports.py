@@ -11,26 +11,34 @@ class Pivot(object):
     STORE = 'store'
 
 
-class Ganularity(object):
+class Granularity(object):
     DAILY = 'daily'
     WEEKLY = 'weekly'
     MONTHLY = 'monthly'
     YEARLY = 'yearly'
 
+    @classmethod
+    def allowed_values(cls):
+        return (cls.DAILY, cls.WEEKLY, cls.MONTHLY, cls.YEARLY)
 
-class ReportCollection(list):
+    @classmethod
+    def validate(cls, value):
+        if value not in cls.allowed_values():
+            raise ParametersInvalid(
+                '{} is not a valid granularity value. Allowed values: {}'.format(
+                    value, cls.allowed_values()))
+
+
+class ReportCollection(dict):
     GROUP_BY_FIELDS = (Pivot.PRODUCT,
                        Pivot.COUNTRY,
                        Pivot.DATE,
                        Pivot.STORE)
 
-    def __init__(self):
-        pass
-
 
 class SalesReport(AppFigureObject):
 
-    def __init__(self, json):
+    def _load_from_json(self, json):
         # An int representing the total number of downloads.
         self.downloads = as_int_or_none(json.get('downloads'))
 

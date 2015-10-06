@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
-import os
 import six
 import requests
 
 from purl import URL
 
 from . import base
+from . import reports
 from .decorators import cached_property
 from .products import Product
 from .reviews import ReviewCollection, Review
+from .exceptions import ParametersInvalid
 
 
 class Client(object):
@@ -58,6 +59,17 @@ class Client(object):
             "you have to provide an 'appfigure_id' or 'store' and 'product_id' "
             "parameters")
 
+    def find_product(self, term, filter, page, count=25):
+        raise NotImplementedError()
+
+    def find_product_by_developer(self, developer, filter, page, count=25):
+        term = '@developer={}'.format(developer)
+        return self.find_product(term, filter, page, count)
+
+    def find_product_by_name(self, name, filter, page, count=25):
+        term = '@name={}'.format(name)
+        return self.find_product(term, filter, page, count)
+
     def _get_product_by_appfigures_id(self, appfigures_id,
                                       include_metadata=False):
         """
@@ -101,27 +113,16 @@ class Client(object):
 
         return Product(response.json())
 
-    def find_product(self, term, filter, page, count=25):
-        raise NotImplementedError()
-
-    def find_product_by_developer(self, developer, filter, page, count=25):
-        term = '@developer={}'.format(developer)
-        return self.find_product(term, filter, page, count)
-
-    def find_product_by_name(self, name, filter, page, count=25):
-        term = '@name={}'.format(developer)
-        return self.find_product(term, filter, page, count)
-
     def find_reviews(self, query=None, products=None, countries=None, page=1,
                      count=25, languages=None, author=None, versions=None,
                      stars=None, sort=None, start=None, end=None):
 
         if 0 > count > 500:
-            raise exceptions.ParametersInvalid(
+            raise ParametersInvalid(
                 'count parameter has to be between 0 and 500')
 
         if sort and not Review.is_valid_sort_key(sort):
-            raise exceptions.ParametersInvalid(
+            raise ParametersInvalid(
                 'key {} is not a valid sort key, only {} are allowed'.format(
                     sort, Review.SORT_FIELDS))
 
@@ -168,6 +169,42 @@ class Client(object):
             response.raise_for_status()
 
         return ReviewCollection(response.json())
+
+    def simple_sales_report(self, products=None, countries=None,
+                            include_inapps=False,
+                            start_date=None, end_date=None,
+                            granularity=reports.Granularity.DAILY):
+        url = self.BASE_URL.add_path_segment('/reports/sales/')
+
+        query_params = {}
+
+        if products:
+            query_params['products'] = self._iter_to_query_param(products)
+
+        if countries:
+            query_params['countries'] = self._iter_to_query_param(countries)
+
+        if include_inapps:
+            query_params['include_inapps'] = 'true'
+
+        if granularity and reports.Granularity.validate(granularity):
+            query_params['granularity'] = granularity
+
+        if start_date:
+            query_params['start_date'] = start_date.strftime(
+                base.QUERY_DATE_FORMAT)
+
+        if end_date:
+            query_params['end_date'] = end_date.strftime(base.QUERY_DATE_FORMAT)
+
+        response = self.session.get(url.as_string(),
+                                    timeout=self.timeout,
+                                    params=query_params)
+
+        if not response.ok:
+            response.raise_for_status()
+
+        return reports.SalesReport(response.json())
 
     def _iter_to_query_param(self, iterable):
         return ','.join([six.u(str(i)) for i in iterable])
