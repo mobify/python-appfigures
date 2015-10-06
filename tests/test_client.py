@@ -151,6 +151,7 @@ def test_review_ratings_for_single_product(client):
         assert sorted(ratings.stars.values()) == [16, 22, 30, 66, 149]
 
         assert ratings.stars_total == 283
+        assert ratings.average_rating == D('2.363957597173144876325088339')
 
 
 @pytest.mark.integration

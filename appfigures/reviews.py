@@ -89,8 +89,8 @@ class ReviewRating(base.AppFigureObject):
 
     @property
     def average_rating(self):
-        if self.stars_total:
+        if not self.stars_total:
             return None
 
         star_sum = sum([s * c for s, c in six.iteritems(self.stars)])
-        return star_sum / self.stars_total
+        return D(star_sum) / D(self.stars_total)
