@@ -131,6 +131,29 @@ def test_retrieve_reviews_for_app_store_product(client):
 
 
 @pytest.mark.integration
+def test_review_ratings_for_single_product(client):
+    recorder = betamax.Betamax(client.session)
+
+    with recorder.use_cassette('test_ratings_for_single_product'):
+        ratings = client.review_ratings(products=[39740449578])
+
+        assert ratings.tags == {}
+
+        assert sorted(ratings.countries.keys()) == sorted(['CA', 'US'])
+        assert sorted(ratings.countries.values()) == sorted([225, 58])
+
+        assert ratings.languages == {'N/A': 283}
+        assert ratings.versions == {'N/A': 283}
+
+        assert ratings.products == {'39740449578': 283}
+
+        assert sorted(ratings.stars.keys()) == range(1, 6)
+        assert sorted(ratings.stars.values()) == [16, 22, 30, 66, 149]
+
+        assert ratings.stars_total == 283
+
+
+@pytest.mark.integration
 def test_generate_simple_sales_report_for_single_product(client):
     recorder = betamax.Betamax(client.session)
 

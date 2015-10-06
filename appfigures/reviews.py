@@ -2,7 +2,7 @@
 from __future__ import unicode_literals, absolute_import
 import six
 
-from decimal import Decimal as D
+from decimal import InvalidOperation, Decimal as D
 from dateutil.parser import parse
 
 from . import base
@@ -69,3 +69,28 @@ class Review(base.AppFigureObject):
     def is_valid_sort_key(cls, key):
         valid_keys = cls.SORT_FIELDS + ['-{}'.format(f) for f in cls.SORT_FIELDS]
         return key in valid_keys
+
+
+class ReviewRating(base.AppFigureObject):
+
+    def _load_from_json(self, json):
+        self.stars = {}
+        self.stars_total = 0
+
+        for star, count in six.iteritems(json.get('stars', {})):
+            self.stars[int(star)] = count
+            self.stars_total += count
+
+        self.versions = json.get('versions', {})
+        self.countries = json.get('countries', {})
+        self.products = json.get('products', {})
+        self.languages = json.get('languages', {})
+        self.tags = json.get('tags', {})
+
+    @property
+    def average_rating(self):
+        if self.stars_total:
+            return None
+
+        star_sum = sum([s * c for s, c in six.iteritems(self.stars)])
+        return star_sum / self.stars_total

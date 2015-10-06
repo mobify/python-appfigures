@@ -9,7 +9,7 @@ from . import base
 from . import reports
 from .decorators import cached_property
 from .products import Product
-from .reviews import ReviewCollection, Review
+from .reviews import ReviewCollection, Review, ReviewRating
 from .exceptions import ParametersInvalid
 
 
@@ -169,6 +169,48 @@ class Client(object):
             response.raise_for_status()
 
         return ReviewCollection(response.json())
+
+    def review_ratings(self, query=None, products=None, countries=None,
+                       author=None, versions=None, stars=None,
+                       start_date=None, end_date=None):
+
+        url = self.BASE_URL.add_path_segment('/reviews/count')
+
+        query_params = {}
+
+        if products:
+            query_params['products'] = self._iter_to_query_param(products)
+
+        if query:
+            query_params['q'] = query
+
+        if countries:
+            query_params['countries'] = self._iter_to_query_param(countries)
+
+        if author:
+            query_params['author'] = author
+
+        if versions:
+            query_params['versions'] = self._iter_to_query_param(versions)
+
+        if stars:
+            query_params['start'] = self._iter_to_query_param(stars)
+
+        if start_date:
+            query_params['start'] = start_date.strftime(base.QUERY_DATE_FORMAT)
+
+        if end_date:
+            query_params['end'] = end_date.strftime(base.QUERY_DATE_FORMAT)
+
+        response = self.session.get(url.as_string(),
+                                    timeout=self.timeout,
+                                    params=query_params)
+
+        if not response.ok:
+            response.raise_for_status()
+
+        return ReviewRating(response.json())
+
 
     def simple_sales_report(self, products=None, countries=None,
                             include_inapps=False,
