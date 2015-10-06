@@ -4,6 +4,7 @@ from .base import AppFigureObject
 
 from .utils import as_int_or_none, as_decimal_or_none
 
+
 class Pivot(object):
     PRODUCT = 'product'
     COUNTRY = 'country'
@@ -53,7 +54,8 @@ class SalesReport(AppFigureObject):
         # An int representing the total number of updates.
         self.updates = as_int_or_none(json.get('updates'))
 
-        # A float representing the total revenue in the user’s selected currency.
+        # A float representing the total revenue in the user’s selected
+        # currency.
         self.revenue = as_decimal_or_none(json.get('revenue'))
 
         # An int representing the total number of returns.
@@ -61,10 +63,12 @@ class SalesReport(AppFigureObject):
 
         self.edu_downloads = as_int_or_none(json.get('edu_downloads'))
 
-        # An int representing the number of times products in this report were gifted.
+        # An int representing the number of times products in this report were
+        # gifted.
         self.gifts = as_int_or_none(json.get('gifts'))
 
-        # An int representing the number of times products in this report were gifted and then redeemed.
+        # An int representing the number of times products in this report were
+        # gifted and then redeemed.
         self.gift_redemptions = as_int_or_none(json.get('gift_redemptions'))
 
         # An int representing the total number of promo codes used.
