@@ -32,7 +32,9 @@ Quickstart
 
 For now, you'll have to create your OAuth token and secret manually. Assuming
 you have your API and OAuth credentials available, you can access the
-AppFigures API like this::
+AppFigures API like this:
+
+.. code:: python
 
     from appfigures import stores
     from appfigures.client import Client
