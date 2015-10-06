@@ -93,4 +93,4 @@ class ReviewRating(base.AppFigureObject):
             return None
 
         star_sum = sum([s * c for s, c in six.iteritems(self.stars)])
-        return D(star_sum) / D(self.stars_total)
+        return (D(star_sum) / D(self.stars_total)).quantize(D('0.1'))
