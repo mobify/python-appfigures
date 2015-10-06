@@ -9,9 +9,10 @@ requires = ['python-dateutil',
             'six']
 
 tests_requires = ['pytest',
-                 'pytest-cache',
-                 'pytest-cov',
-                 'betamax']
+                  'pytest-pep8',
+                  'pytest-cache',
+                  'pytest-cov',
+                  'betamax']
 
 development_requres = ['bumpversion'] + tests_requires
 
