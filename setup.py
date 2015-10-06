@@ -14,7 +14,7 @@ tests_requires = ['pytest',
                   'pytest-cov',
                   'betamax']
 
-development_requres = ['bumpversion'] + tests_requires
+development_requires = ['bumpversion'] + tests_requires
 
 
 class PyTest(TestCommand):
@@ -51,5 +51,6 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: Implementation :: CPython'],
-    extras_require={'test': tests_requires},
+    extras_require={'test': tests_requires,
+                    'development': development_requires},
     cmdclass={'test': PyTest})

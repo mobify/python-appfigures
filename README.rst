@@ -50,7 +50,7 @@ Install the project and all its requirements in development mode:
 
 .. code:: bash
 
-    $ pip install -e ".[test]"
+    $ pip install -e ".[development]"
 
 
 License
