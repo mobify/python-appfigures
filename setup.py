@@ -8,10 +8,12 @@ requires = ['python-dateutil',
             'purl',
             'six']
 
-tests_require = ['pytest',
+tests_requires = ['pytest',
                  'pytest-cache',
                  'pytest-cov',
                  'betamax']
+
+development_requres = ['bumpversion'] + tests_requires
 
 
 class PyTest(TestCommand):
@@ -48,5 +50,5 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: Implementation :: CPython'],
-    extras_require={'test': tests_require},
+    extras_require={'test': tests_requires},
     cmdclass={'test': PyTest})
