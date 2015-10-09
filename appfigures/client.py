@@ -75,7 +75,7 @@ class Client(object):
         """
         Retrieve the product with the AppFigures product ID `product_id`.
         """
-        path = '/products/{appfigures_id}'.format(appfigures_id=appfigures_id)
+        path = 'products/{appfigures_id}'.format(appfigures_id=appfigures_id)
         url = self.BASE_URL.add_path_segment(path)
 
         query_params = {}
@@ -96,7 +96,7 @@ class Client(object):
         """
         Retrieve the product with the store identifier and the store ID.
         """
-        path = '/products/{store}/{product_id}'.format(store=store,
+        path = 'products/{store}/{product_id}'.format(store=store,
                                                        product_id=product_id)
         url = self.BASE_URL.add_path_segment(path)
 
@@ -126,7 +126,7 @@ class Client(object):
                 'key {} is not a valid sort key, only {} are allowed'.format(
                     sort, Review.SORT_FIELDS))
 
-        url = self.BASE_URL.add_path_segment('/reviews/')
+        url = self.BASE_URL.add_path_segment('reviews')
 
         query_params = {'page': page,
                         'count': count}
@@ -174,7 +174,7 @@ class Client(object):
                        author=None, versions=None, stars=None,
                        start_date=None, end_date=None):
 
-        url = self.BASE_URL.add_path_segment('/reviews/count')
+        url = self.BASE_URL.add_path_segment('reviews/count')
 
         query_params = {}
 
@@ -241,7 +241,7 @@ class Client(object):
             ParametersInvalid: An invalid parameter for the API is provided.
             HTTPError: The API call returned a status code that's not `200 OK`.
         """
-        url = self.BASE_URL.add_path_segment('/reports/sales/')
+        url = self.BASE_URL.add_path_segment('reports/sales')
 
         query_params = {}
 
