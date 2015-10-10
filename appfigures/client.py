@@ -115,12 +115,36 @@ class Client(object):
         return Product(response.json())
 
     def find_reviews(self, query=None, products=None, countries=None, page=1,
-                     count=25, languages=None, author=None, versions=None,
+                     count=500, lang=None, author=None, versions=None,
                      stars=None, sort=None, start=None, end=None):
+        """
+        Find reviews matching the parameters.
 
-        if 0 > count > 500:
+        `appfigures API Documentation
+        <http://docs.appfigures.com/api/reference/v2/reviews>`
+
+        Args:
+            query: Filter by reviews matching this query string.
+            products: Filter by reviews matching this list of product ids.
+            countries: Filter by countries matching this list of country isos.
+            lang: Translate reviews into this language.
+            author: Filter by reviews matching this author string.
+            versions: Filter by reviews matching this list of versions.
+            stars: Filter by reviews matching this list of stars.
+            sort: How to soort reviews.
+            start: Filter by reviews created after this datetime.
+            end: Filter by reviews created before this datetime.
+
+        Returns:
+            A `ReviewCollection <appfigures.reviews.ReviewCollection` instance.
+
+        Raises:
+            ParametersInvalid: An invalid parameter for the API is provided.
+            HTTPError: The API call returned a status code that's not `200 OK`.
+        """
+        if 1 > count > 501:
             raise ParametersInvalid(
-                'count parameter has to be between 0 and 500')
+                'count parameter must be between 1 and 500')
 
         if sort and not Review.is_valid_sort_key(sort):
             raise ParametersInvalid(
@@ -141,8 +165,8 @@ class Client(object):
         if countries:
             query_params['countries'] = self._iter_to_query_param(countries)
 
-        if languages:
-            query_params['languages'] = self._iter_to_query_param(languages)
+        if lang:
+            query_params['lang'] = self._iter_to_query_param(lang)
 
         if versions:
             query_params['versions'] = self._iter_to_query_param(versions)
