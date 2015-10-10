@@ -17,7 +17,7 @@ class Client(object):
     BASE_URL = URL('https://api.appfigures.com/v2')
 
     def __init__(self, client_key, client_secret, oauth_token, oauth_secret,
-                 signature_method='PLAINTEXT', timeout=5):
+                 signature_method='PLAINTEXT', timeout=10):
         self.client_key = client_key
         self.client_secret = client_secret
         self.oauth_token = oauth_token
