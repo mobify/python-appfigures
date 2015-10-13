@@ -42,7 +42,7 @@ def test_retrieving_project_by_apple_store_id(client):
         assert product.developer == 'Rdio'
         assert product.price.currency == 'USD'
         assert product.price.value == D('0.0')
-        assert product.version == '3.8.2'
+        assert product.version == '3.8.3'
 
         assert product.has_metadata is False
 
@@ -88,7 +88,7 @@ def test_retrieving_project_by_google_play_id_with_metadata(client):
         assert sorted(product.metadata.keys()) == sorted(['en', 'ja'])
 
         assert product.metadata.en.all_rating == D('3.93')
-        assert product.metadata.all_rating_count == 162814
+        assert product.metadata.all_rating_count == 164129
         assert product.metadata.developer_email == 'android@rd.io'
         assert product.metadata.developer_site == 'http://www.rdio.com'
         assert product.metadata.downloads == '10000000-50000000'
@@ -116,23 +116,25 @@ def test_retrieve_reviews_for_app_store_product(client):
 
         review = reviews[0]
         assert review.product_id == '5555936'
-        assert review.original_review == "The app crashes whenever it wants to and just stops playing the music and won't start again unless I restart the app. I also can't download songs when a station is playing because the music will crash and yet again I will have to restart the app. 5 star Amazing music service but just a mediocre 1 star app."  # noqa
+        assert review.original_review == "For some odd reason, this app no longer plays my music on or offline. I would have to reboot 4 or 5 times to listen. I will be canceling my subscription."  # noqa
         assert review.weight == 0
-        assert review.title == 'Wow'
-        assert review.review == "The app crashes whenever it wants to and just stops playing the music and won't start again unless I restart the app. I also can't download songs when a station is playing because the music will crash and yet again I will have to restart the app. 5 star Amazing music service but just a mediocre 1 star app."  # noqa
-        assert review.author == 'Tony D'
-        assert review.original_title == 'Wow'
-        assert review.version == '3.6.2.83'
+        assert review.title == 'I am no longer a fan'
+        assert review.review == "For some odd reason, this app no longer plays my music on or offline. I would have to reboot 4 or 5 times to listen. I will be canceling my subscription."  # noqa
+        assert review.author == 'Richard Alcocer'
+        assert review.original_title == 'I am no longer a fan'
+        assert review.version == '3.6.2.100'
         assert review.country_iso is None
         assert review.country_available is False
-        assert review.stars == D('2.00')
-        assert review.date == datetime(2015, 9, 30, 3, 31, 49)
-        assert review.id == '5555936L2RnbOL3Mz-NjX7wEuPpQIg'
+        assert review.stars == D('1.00')
+        assert review.date == datetime(2015, 10, 13, 15, 43, 12)
+        assert review.id == '5555936LAKYsexDd8EEnqRlwDkzc2w'
 
 
 @pytest.mark.integration
 def test_review_ratings_for_single_product(client):
     recorder = betamax.Betamax(client.session)
+
+    total = 285
 
     with recorder.use_cassette('test_ratings_for_single_product'):
         ratings = client.review_ratings(products=[39740449578])
@@ -140,17 +142,17 @@ def test_review_ratings_for_single_product(client):
         assert ratings.tags == {}
 
         assert sorted(ratings.countries.keys()) == sorted(['CA', 'US'])
-        assert sorted(ratings.countries.values()) == sorted([225, 58])
+        assert sorted(ratings.countries.values()) == sorted([227, 58])
 
-        assert ratings.languages == {'N/A': 283}
-        assert ratings.versions == {'N/A': 283}
+        assert ratings.languages == {'N/A': total}
+        assert ratings.versions == {'N/A': total}
 
-        assert ratings.products == {'39740449578': 283}
+        assert ratings.products == {'39740449578': total}
 
         assert sorted(ratings.stars.keys()) == range(1, 6)
-        assert sorted(ratings.stars.values()) == [16, 22, 30, 66, 149]
+        assert sorted(ratings.stars.values()) == [16, 22, 30, 68, 149]
 
-        assert ratings.stars_total == 283
+        assert ratings.stars_total == total
         assert ratings.average_rating == D('2.4')
 
 
@@ -163,10 +165,10 @@ def test_generate_simple_sales_report_for_single_product(client):
 
         assert report.revenue == D('0.00')
         assert report.gift_redemptions == 0
-        assert report.downloads == 612271
+        assert report.downloads == 614295
         assert report.edu_downloads == 0
         assert report.returns == 0
         assert report.gifts == 0
         assert report.promos == 0
-        assert report.updates == 2210231
-        assert report.net_downloads == 612271
+        assert report.updates == 2211231
+        assert report.net_downloads == 614295
