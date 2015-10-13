@@ -1,16 +1,15 @@
 language: python
-
-env:
-    matrix:
-        - TOX_ENV=py27
-        - TOX_ENV=py34
+python:
+  - "2.7"
+  - "3.4"
+  - "3.5"
 
 before_script:
-    - pip install tox
+    - pip install -e ".[test]"
     - pip install coveralls
 
 script:
-    - tox -e ${TOX_ENV}
+    - py.test --pep8 --cov appfigures --cov-report term-missing
 
 after_success:
     - coveralls
