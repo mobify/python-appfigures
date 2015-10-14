@@ -97,7 +97,8 @@ class Client(object):
         Retrieve the product with the store identifier and the store ID.
         """
         path = 'products/{store}/{product_id}'.format(store=store,
-                                                       product_id=product_id)
+                                                      product_id=product_id)
+
         url = self.BASE_URL.add_path_segment(path)
 
         query_params = {}
@@ -210,7 +211,6 @@ class Client(object):
             response.raise_for_status()
 
         return ReviewRating(response.json())
-
 
     def simple_sales_report(self, products=None, countries=None,
                             include_inapps=False,
