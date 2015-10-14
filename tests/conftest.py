@@ -17,7 +17,9 @@ with betamax.Betamax.configure() as config:
     cassette_dir = 'tests/cassettes/'
     if not os.path.exists(cassette_dir):
         os.makedirs(cassette_dir)
+
     config.cassette_library_dir = cassette_dir
+
     config.define_cassette_placeholder('<CLIENT_KEY>', CLIENT_KEY)
     config.define_cassette_placeholder('<CLIENT_SECRET>', CLIENT_SECRET)
     config.define_cassette_placeholder('<OAUTH_TOKEN>', OAUTH_TOKEN)

@@ -6,13 +6,14 @@ from setuptools.command.test import test as TestCommand
 
 requires = ['python-dateutil',
             'purl',
-            'six']
+            'six',
+            'requests']
 
-tests_requires = ['pytest',
-                  'pytest-pep8',
-                  'pytest-cache',
-                  'pytest-cov',
-                  'betamax']
+tests_requires = ['pytest==2.8.1',
+                  'pytest-pep8==1.0.6',
+                  'pytest-cache==1.0',
+                  'pytest-cov==2.1.0',
+                  'betamax==0.5.0']
 
 development_requires = ['bumpversion'] + tests_requires
 
